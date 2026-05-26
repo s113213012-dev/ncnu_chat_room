@@ -5,5 +5,5 @@ import react from '@vitejs/plugin-react';
 // e.g. https://username.github.io/ai_course_2/ → base: '/ai_course_2/'
 export default defineConfig({
   plugins: [react()],
-  base: '/ai_course_2/',
+  base: '/ncnu_chat_room/',
 });
