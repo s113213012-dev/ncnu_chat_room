@@ -4,19 +4,13 @@ on:
   push:
     branches: [main]
     paths: [webui/**]
-  workflow_dispatch: # allow manual trigger from GitHub Actions UI
+  workflow_dispatch:
 
 permissions:
-  contents: read
-  pages: write      # required to deploy to Pages
-  id-token: write   # required for OIDC token
-
-concurrency:
-  group: pages
-  cancel-in-progress: true
+  contents: write
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -30,19 +24,8 @@ jobs:
       - name: Install and build
         run: cd webui && npm ci && npm run build
 
-      - uses: actions/configure-pages@v4
-
-      - uses: actions/upload-pages-artifact@v3
-        with:
-          path: ./webui/dist
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    steps:
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./webui/dist
